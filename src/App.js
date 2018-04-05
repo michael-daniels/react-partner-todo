@@ -1,18 +1,41 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Input from './Input'
+import List from './List'
 
 class App extends Component {
+
+  state = {todos:[]};
+
+  componentDidMount() {
+    fetch('https://jsonplaceholder.typicode.com/todos')
+      .then((res) => {
+        res.json()
+        .then((data) => {
+          console.log(data)
+          let tempState = data.filter(todo => todo.id <= 5)
+          console.log('tempState: ', tempState);
+          this.setState({todos: tempState})
+          console.log(this.state)
+        })
+      })
+  }
+
+  addTodo = (todoObj) => {
+
+
+    this.setState({
+      todos: this.state.todos.concat(todoObj)
+    })
+  }
+
   render() {
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div className="container">
+        <Input todos={this.state.todos} addTodo={this.addTodo}/>
+        <List todos={this.state.todos}/>
+
       </div>
     );
   }
